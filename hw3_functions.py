@@ -80,10 +80,10 @@ def population_by_ethnicity(counties: list[CountyDemographics], ethnicity: str) 
 # (1) iterate through each county (2)access the percentage of people below the poverty level (3) multiply 2014 population
 # by percentage below poverty level. (4) add this number to accumulator (5) Return accumulated value
 
-def population_below_poverty_level(counties: list[CountyDemographics]) -> float:
+def population_below_poverty_level(counties: list[CountyDemographics], demographic: str) -> float:
     pop_below = 0
     for county in counties:
-        percent_below = county.income.get('Persons Below Poverty Level')/100
+        percent_below = county.income.get(f'{demographic}')/100
         pop_below += percent_below * county.population.get('2014 Population')
     return pop_below
 

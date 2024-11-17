@@ -1,6 +1,7 @@
 import sys
 import build_data, hw3_functions
 import data
+from hw3_functions import population_by_education
 
 # define the full dataset
 full_data = build_data.get_data()
@@ -38,7 +39,10 @@ with open(operation, 'r') as open_file:
 
             # Used in filter funcitons
             field = current_field.split('.')[0].lower()
-            demographic = current_field.split('.')[1]
+
+            #must ensure that there is a specified demographic
+            if '.' in current_field:
+                demographic = current_field.split('.')[1]
 
         else:
             current_operation = current_line
@@ -125,10 +129,26 @@ with open(operation, 'r') as open_file:
 
 
             elif current_operation == "population-total":
-                pass
+                if len(relevant_counties) > 0:
+                    total_pop = hw3_functions.population_total(relevant_counties)
+                else:
+                    totasdfasdfasdfasdf
+                print(f'Filter: 2014 Population: {total_pop} entries')
 
+
+            # will return a subpopulation based off of a field passed to the operation
             elif current_operation == "population":
-                pass
+                if field == "education":
+                    population = population_by_education(full_data,demographic)
+                elif field == "ethnicities":
+                    population = hw3_functions.population_by_ethnicity(full_data,demographic)
+                elif field == "income":
+                    population = hw3_functions.population_below_poverty_level(full_data,demographic)
+                else:
+                    print(f'Error:"{field}" invalid for operation "population"')
+
+                relevant_pop = population
+                print(f'2014 Population {demographic}: {relevant_pop}')
 
             elif current_operation == "percent":
                 pass
