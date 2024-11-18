@@ -49,13 +49,14 @@ def filter_by_state(demographics: list[CountyDemographics], state_ab: str) -> li
 # before we multiply  it by the total population
 
 def population_by_education(counties: list[CountyDemographics], education_level: str) -> int:
+    educated_pop = []
     for county in counties:
         if f'{education_level}' in county.education:
             percent_educated = county.education.get(education_level)
-            return (percent_educated * 10**-2) * population_total(counties)
+            educated_pop.append((percent_educated * 10**-2) * county.population.get('2014 Population'))
         else:
             return 0
-
+    return sum(educated_pop)
 
 # population_by_ethnicity
 ########################################################################################################################
@@ -65,13 +66,14 @@ def population_by_education(counties: list[CountyDemographics], education_level:
 # similar functionality to population_by_education
 
 def population_by_ethnicity(counties: list[CountyDemographics], ethnicity: str) -> int:
+    ethnic_pop = []
     for county in counties:
         if f'{ethnicity}' in county.ethnicities:
-            ethnicity_percentage = county.ethnicities.get(ethnicity)
-            return (ethnicity_percentage * 10**-2) * population_total(counties)
+            percent_educated = county.ethnicities.get(ethnicity)
+            ethnic_pop.append((percent_educated * 10**-2) * county.population.get('2014 Population'))
         else:
             return 0
-
+    return sum(ethnic_pop)
 
 # population_below_poverty
 ########################################################################################################################
@@ -128,9 +130,9 @@ def percent_by_ethnicity(counties: list[CountyDemographics], ethnicity: str) -> 
 # and the total population of people below the poverty level. it will then divide the two and return the result as a
 # percentage
 
-def percent_below_poverty_level(counties: list[CountyDemographics]) -> float:
+def percent_below_poverty_level(counties: list[CountyDemographics], demographic:str) -> float:
     total_pop = population_total(counties)
-    impoverished_pop = population_below_poverty_level(counties)
+    impoverished_pop = population_below_poverty_level(counties,demographic)
     if total_pop > 0:
         return (impoverished_pop / total_pop) * 100
     else:
