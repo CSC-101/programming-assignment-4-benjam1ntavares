@@ -1,10 +1,5 @@
 import sys
-from logging import exception, error
-from webbrowser import Error
-
 import build_data, hw3_functions
-import data
-from hw3_functions import population_by_education, percent_by_education
 
 # define the full dataset
 full_data = build_data.get_data()
@@ -18,6 +13,9 @@ operation = sys.argv[1]
 # list used to store all counties returned by preforming the specific operations specified in the .ops file currently
 # being processed
 relevant_counties = []
+while len(relevant_counties) == 0:
+    relevant_counties = full_data
+
 # open the file in read format (automatically closing)
 try:
     with open(operation, 'r') as open_file:
@@ -140,7 +138,7 @@ try:
                 # will return a subpopulation based off of a field passed to the operation
                 elif current_operation == "population":
                     if field == "education":
-                        population = population_by_education(full_data,demographic)
+                        population = hw3_functions.population_by_education(full_data,demographic)
                     elif field == "ethnicities":
                         population = hw3_functions.population_by_ethnicity(full_data,demographic)
                     elif field == "income":
