@@ -72,7 +72,7 @@ def population_by_ethnicity(counties: list[CountyDemographics], ethnicity: str) 
             percent_educated = county.ethnicities.get(ethnicity)
             ethnic_pop.append((percent_educated * 10**-2) * county.population.get('2014 Population'))
         else:
-            return 0
+            raise ValueError(f'"{ethnicity}" is undefined')
     return sum(ethnic_pop)
 
 # population_below_poverty
@@ -107,7 +107,7 @@ def percent_by_education(counties: list[CountyDemographics], education_level: st
     if total_pop > 0:
         return (educated_pop / total_pop) * 100
     else:
-        return 0
+        raise ValueError(f'"{education_level}" is undefined')
 
 
 # percent_by_ethnicity
@@ -121,7 +121,7 @@ def percent_by_ethnicity(counties: list[CountyDemographics], ethnicity: str) -> 
     if total_pop > 0:
         return (ethnicity_pop / total_pop) * 100
     else:
-        return 0
+        raise ValueError(f'"{ethnicity}" is undefined')
 
 
 # percent_below_poverty_level
@@ -156,6 +156,8 @@ def education_greater_than(counties: list[CountyDemographics], key: str, thresho
         if county.education.get(key):
             if county.education.get(key) > threshold:
                 filtered_counties.append(county)
+        else:
+            raise NameError(f'"{key}" is undefined')
     return filtered_counties
 
 def education_less_than(counties: list[CountyDemographics], key: str, threshold: float) -> list[CountyDemographics]:
@@ -164,6 +166,8 @@ def education_less_than(counties: list[CountyDemographics], key: str, threshold:
         if county.education.get(key):
             if county.education.get(key) < threshold:
                 filtered_counties.append(county)
+        else:
+            raise NameError(f'"{key}" is undefined')
     return filtered_counties
 
 # helper funciton to list the names of the counties in filtered county lists to simplify testing
