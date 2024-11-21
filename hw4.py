@@ -13,16 +13,28 @@ relevant_counties = []
 
 
 # Ask in class how to fix this, works for everything except for errors, becasue it displays all information
-'''
+# this will cause issues in 'some errors' to see propper error handling remove the display function. at the end of the
+# 'some errors' file
 while len(relevant_counties) == 0:
     relevant_counties = full_data
-'''
+
+# Methodology: I have attempted to handle all of the inputs at the beginning of the program, so any
+
+
 try:
-    # Open the operations file specified in the command-line arguments
+    # Open the operations file specified in the command-line arguments (this format will automatically close it when done)
     with open(operation, 'r') as open_file:
+
+# This section handles the input file line by line
+# You will noice a nested try except block, originally I attempted to use one try except block, however I ran into the
+# issue that when an error was raised, the program would stop running. Using the nested try-except made it so the program
+# would print the error message, but it would continue to iterate through the rest of the lines.
+########################################################################################################################
         # Iterate through each line in the file
         for line in open_file:
             current_line = line.strip()
+
+            # handles empty lines when iterating line by line through the file
             if not current_line:
                 continue
 
@@ -30,14 +42,17 @@ try:
                 #  Extract the operation and parameters from the current line
                 if ':' in current_line:
                     inputs = current_line.split(":")
+
+                    # Because of 'some errors' when there are more than 2 ':'
                     if len(inputs) > 3:
                         raise ValueError(f'"{current_line}" not valid')
 
                     current_operation = inputs[0]
                     current_field = inputs[1] if len(inputs) > 1 else None
                     current_threshold = float(inputs[2]) if len(inputs) > 2 else None
+                    # used to find the specified field in filter-lt/gt and population operations such operations require
+                    # being split again at their ('.')
                     field = current_field.split('.')[0].lower()
-
                     if '.' in current_field:
                         demographic = current_field.split('.')[1]
 
@@ -46,31 +61,30 @@ try:
                     current_field = None
                     current_threshold = None
 
+########################################################################################################################
+
                 # Handle display operation
                 if current_operation == "display":
                     for county in relevant_counties:
                         # Print county header and information in readable format
                         print('*' * 50 + '\t' + f'{county.county}' + '\t' + '*' * 50 + '\n')
-                        print('Age:')
+                        print(f'State: {county.state}\n')
+                        print('Age:\n')
                         for key, value in county.age.items():
                             print(f'\t{key}: {value}')
-                        print()
-                        print('Education:')
+                        print('\nEducation:\n')
                         for key, value in county.education.items():
                             print(f'\t{key}: {value}')
-                        print()
-                        print('Ethnicity:')
+                        print('\nEthnicity:\n')
                         for key, value in county.ethnicities.items():
                             print(f'\t{key}: {value}')
-                        print()
-                        print('Income:')
+                        print('\nIncome:\n')
                         for key, value in county.income.items():
                             if 'Income' in key:
                                 print(f'\t{key}: ${value}')
                             else:
                                 print(f'\t{key}: {value}')
-                        print()
-                        print('Population:')
+                        print('\nPopulation:\n')
                         for key, value in county.population.items():
                             print(f'\t{key}: {value}')
                         print('\n')
@@ -94,7 +108,7 @@ try:
                     else:
                         print(f'Error:"{field}" invalid for operation "filter-gt"')
                     relevant_counties = filtered_counties
-                    print(f'Filter: {field} GT {current_threshold} : {len(relevant_counties)} entries')
+                    print(f'Filter: {demographic} GT {current_threshold} : {len(relevant_counties)} entries')
 
                 # Handle less-than filter
                 elif current_operation == "filter-lt":
