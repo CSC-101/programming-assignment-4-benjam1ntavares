@@ -62,6 +62,9 @@ try:
                     current_threshold = None
 
 ########################################################################################################################
+# now that the inputs have been separated into a more digestible format, the rest of the program aims to use these parts
+# to execute the desired operation.
+
 
                 # Handle display operation
                 if current_operation == "display":
